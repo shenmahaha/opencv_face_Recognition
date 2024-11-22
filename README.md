@@ -1,119 +1,37 @@
-# LVGL on top of Linux graphics stack
+# 基于Opencv的人脸识别签到系统（客户端）（LVGL+C++）
 
-Example project to use LVGL on top of Linux graphics stack.
-Currently supported backends are either legacy framebuffer
-(fbdev), modern DRM/KMS, or SDL2.
+## 使用技术
+- LVGL9.1
+- opencv
+- TCP
+- OSS
 
-By default, legacy framebuffer backend uses `/dev/fb0` device node,
-DRM/KMS backend uses '/dev/dri/card0' card node, SDL2 uses window
-resolution of 800x480.
+## 界面截图
 
-Check out this blog post for a step by step tutorial:
-https://blog.lvgl.io/2018-01-03/linux_fb
+![1](https://github.com/user-attachments/assets/0b67d004-6867-4732-b435-48b93baaff04)
 
-## Clone the project
+## 第一步
 
-Clone the LVGL Framebuffer Demo project and its related sub modules.
+下载源码到ubuntu20.04（已配置好opencv环境，阿里云OSS环境），并在编译器中打开。
 
-```
-git clone https://github.com/lvgl/lv_port_linux.git
-cd lv_port_linux/
-git submodule update --init --recursive
-```
+## 第二步
 
-## Select graphics backend (optional)
+修改相关配置
 
-To use legacy framebuffer (fbdev) support, adjust `lv_conf.h` as follows:
-```
-#define LV_USE_LINUX_FBDEV	1
-#define LV_USE_LINUX_DRM	0
-#define LV_USE_SDL		0
-```
+![image](https://github.com/user-attachments/assets/2837f2c6-2c73-4073-b71a-d40152e3cd22)
 
-To use modern DRM/KMS support, adjust `lv_conf.h` as follows:
-```
-#define LV_USE_LINUX_FBDEV	0
-#define LV_USE_LINUX_DRM	1
-#define LV_USE_SDL		0
-```
+脸部特征模型路径可以不改
 
-To use SDL2 support, adjust `lv_conf.h` as follows:
-```
-#define LV_USE_LINUX_FBDEV	0
-#define LV_USE_LINUX_DRM	0
-#define LV_USE_SDL		1
-```
+![image](https://github.com/user-attachments/assets/42ec633f-b6e4-4525-a5c2-74ddd16035b3)
 
-## Build the project (cmake or Makefile)
-
-### cmake
+## 第三步
 
 ```
-mkdir build
-cd build 
-cmake ..
-make -j
+make clean
+
+make -j16
 ```
 
-### Makefile
-
-```
-make -j
-```
-
-## Environment variables
-
-Environment variables can be set to modify behavior of the demo.
-The following variables are supported.
-
-### Legacy framebuffer (fbdev)
-
-- `LV_LINUX_FBDEV_DEVICE` - override default (`/dev/fb0`) framebuffer device node.
-
-### DRM/KMS
-
-- `LV_LINUX_DRM_CARD` - override default (`/dev/dri/card0`) card.
-
-### SDL2
-
-- `LV_SDL_VIDEO_WIDTH` - width of SDL2 surface (default `800`).
-- `LV_SDL_VIDEO_HEIGHT` - height of SDL2 surface (default `480`).
-
-## Run the demo application
-
-### As root
-
-Normal users don't have access to `/dev/fb0` so use `sudo` (or see below) : 
-
-cmake:
-```
-cd ../bin
-sudo main
-```
-
-Makefile:
-```
-cd build/bin/
-sudo main
-```
-
-### Userland
-
-You can give a normal user access to the framebuffer by adding them to the `video` group : 
 
 
-cmake:
-```
-sudo adduser $USER video
-newgrp video
-cd ../bin
-./main
-```
 
-Makefile:
-```
-sudo adduser $USER video
-newgrp video
-cd build/bin/
-./main
-```
